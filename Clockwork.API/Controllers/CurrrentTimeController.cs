@@ -9,18 +9,19 @@ namespace Clockwork.API.Controllers
     public class CurrentTimeController : Controller
     {
         // GET api/currenttime
-        [HttpGet]
-        public IActionResult Get()
+        [HttpPost]
+        public IActionResult Post(string timeZone)
         {
             var utcTime = DateTime.UtcNow;
-            var serverTime = DateTime.Now;
             var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
-
+            TimeZoneInfo timeInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            var serverTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, timeInfo);
             var returnVal = new CurrentTimeQuery
             {
                 UTCTime = utcTime,
                 ClientIp = ip,
-                Time = serverTime
+                Time = serverTime,
+                TimeZone = timeZone
             };
 
             using (var db = new ClockworkContext())
