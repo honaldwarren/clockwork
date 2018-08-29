@@ -1,12 +1,36 @@
 ﻿<script>
     function UserAction() {
-        $.get('http://localhost:53922/api/currenttime', function (data) {
-            $('#output').html('').removeClass('d-none');
+        $.get('http://localhost:53922/api/CurrentTime', function (data) {
+            $('#new-clock').removeClass('d-none');
+            $('#output').html('');
             $.each(data, function (key, value) {
                 $('#output').append('<p><b>' + key + '</b>: ' + value +'</p>');
             });
+            DisplayList();
         });
     }
+
+    function CloseNewClock() {
+        $('#new-clock').addClass('d-none');
+    }
+
+    function DisplayList() {
+        $.get('http://localhost:53922/api/CurrentTime/List', function (data) {
+            $('#clock-list tbody').html('');
+            $.each(data, function (key, rows) {
+                tr = $('<tr>');
+                $.each(rows, function (keyRow, row) {
+                    td = $('<td>').html(row);
+                    tr.append(td)
+                });
+                $('#clock-list tbody').append(tr);
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        DisplayList();
+    });
 </script>
 
 <div class="container">
@@ -22,7 +46,27 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mt-2">
-            <p id="output" class="alert alert-success d-none" role="alert"></p>
+            <div id="new-clock" class="alert alert-success d-none" role="alert">
+                <p id="output"></p>
+                <div class="text-right">
+                    <button type="button" class="btn btn-danger" onclick="CloseNewClock()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped" id="clock-list">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">TIME</th>
+                        <th scope="col">IP ADDRESS</th>
+                        <th scope="col">UTC TIME</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>

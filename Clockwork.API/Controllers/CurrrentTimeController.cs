@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Clockwork.API.Models;
+using System.Collections.Generic;
 
 namespace Clockwork.API.Controllers
 {
@@ -36,6 +37,21 @@ namespace Clockwork.API.Controllers
             }
 
             return Ok(returnVal);
+        }
+
+        [HttpGet]
+        [Route("List")]
+        public List<CurrentTimeQuery> List()
+        {
+            var list = new List<CurrentTimeQuery>();
+            using (var db = new ClockworkContext())
+            {
+                foreach (var currentTimeQuery in db.CurrentTimeQueries)
+                {
+                    list.Add(currentTimeQuery);
+                }
+            }
+            return list;
         }
     }
 }
