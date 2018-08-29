@@ -1,21 +1,29 @@
 ﻿<script>
-function UserAction() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("output").innerHTML = this.responseText;
-        }
-    };
-    xhttp.open("GET", "http://localhost:53922/api/currenttime", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
-
-}
+    function UserAction() {
+        $.get('http://localhost:53922/api/currenttime', function (data) {
+            $('#output').html('').removeClass('d-none');
+            $.each(data, function (key, value) {
+                $('#output').append('<p><b>' + key + '</b>: ' + value +'</p>');
+            });
+        });
+    }
 </script>
 
-<h2>AWH Clockwork Project @ViewData["Version"] on @ViewData["Runtime"]!</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>AWH Clockwork Project @ViewData["Version"] on @ViewData["Runtime"]!</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <button type="button" class="btn btn-primary" onclick="UserAction()">Get the time</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mt-2">
+            <p id="output" class="alert alert-success d-none" role="alert"></p>
+        </div>
+    </div>
+</div>
 
-
-<button type="submit" onclick="UserAction()">Get the time</button>
-
-<p id="output"></p>
